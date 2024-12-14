@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",                           // Versión de JS para el output
+      "module": "CommonJS",                        // Sistema de módulos
+      "rootDir": "src",                            // Carpeta raíz del código TS
+      "outDir": "dist",                            // Carpeta de salida de código compilado
+      "moduleResolution": "node",                 // Resolución de módulos de Node.js
+      "strict": true,                             // Habilitar verificaciones estrictas
+      "esModuleInterop": true,                    // Permitir importaciones comunes en Node.js
+      "skipLibCheck": true,                       // Ignorar chequeo de tipos en librerías externas
+      "baseUrl": "./",                            // Punto base para resolver rutas relativas
+      "paths": {                                  // Configuración de alias
+        "@models/*": ["src/models/*"],
+        "@services/*": ["src/services/*"],
+        "@controllers/*": ["src/controllers/*"],
+        "@config/*": ["src/config/*"]
+      }
+    },
+    "include": ["src"],                           // Archivos incluidos en la compilación
+    "exclude": ["node_modules", "dist"]          // Archivos y carpetas excluidos
+  }
+  
