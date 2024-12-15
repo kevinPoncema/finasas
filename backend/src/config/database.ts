@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import path from "path";
-
 const sequelize = new Sequelize({
   dialect: "mysql",
   host: process.env.DB_HOST,

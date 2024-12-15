@@ -42,7 +42,7 @@ proyecto-finanzas/
 │   ├── src/
 │   │   ├── config/            # Configuraciones generales (e.g., base de datos, variables de entorno)
 │   │   │   └── database.js
-│   │   │   └── env.js
+│   │   │
 │   │   ├── controllers/       # Lógica de controladores (manejo de rutas)
 │   │   │   ├── userController.js
 │   │   │   ├── transactionController.js

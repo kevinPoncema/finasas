@@ -101,7 +101,6 @@ Esta tabla representa a los usuarios finales dentro de un frontend creado por un
 | `nombre`           | VARCHAR(100)       | Nombre del subusuario.                       |
 | `correo`           | VARCHAR(255)       | Email del subusuario (único dentro de la instancia). |
 | `contraseña`       | VARCHAR(255)       | Contraseña cifrada del subusuario.           |
-| `permisos`         | ENUM('lectura', 'escritura', 'edición') | Permisos asignados. |
 | `creado_en`        | TIMESTAMP          | Fecha de creación del subusuario.            |
 
 #### **Modelo: Transacciones**

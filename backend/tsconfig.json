@@ -1,22 +1,23 @@
 {
-    "compilerOptions": {
-      "target": "ES2020",                           // Versión de JS para el output
-      "module": "CommonJS",                        // Sistema de módulos
-      "rootDir": "src",                            // Carpeta raíz del código TS
-      "outDir": "dist",                            // Carpeta de salida de código compilado
-      "moduleResolution": "node",                 // Resolución de módulos de Node.js
-      "strict": true,                             // Habilitar verificaciones estrictas
-      "esModuleInterop": true,                    // Permitir importaciones comunes en Node.js
-      "skipLibCheck": true,                       // Ignorar chequeo de tipos en librerías externas
-      "baseUrl": "./",                            // Punto base para resolver rutas relativas
-      "paths": {                                  // Configuración de alias
-        "@models/*": ["src/models/*"],
-        "@services/*": ["src/services/*"],
-        "@controllers/*": ["src/controllers/*"],
-        "@config/*": ["src/config/*"]
-      }
-    },
-    "include": ["src"],                           // Archivos incluidos en la compilación
-    "exclude": ["node_modules", "dist"]          // Archivos y carpetas excluidos
-  }
-  
+  "compilerOptions": {
+    "target": "ES2022",                           // Nivel de salida para el código JS (ES2022 para decoradores modernos)
+    "module": "CommonJS",                         // Sistema de módulos utilizado
+    "rootDir": "src",                             // Carpeta raíz del código TS
+    "outDir": "dist",                             // Carpeta de salida del código compilado
+    "moduleResolution": "node",                  // Resolución de módulos estilo Node.js
+    "strict": true,                              // Habilitar modo estricto
+    "esModuleInterop": true,                     // Permitir importaciones de módulos comunes
+    "skipLibCheck": true,                        // Ignorar el chequeo de tipos en librerías externas
+    "experimentalDecorators": true,             // Habilitar decoradores (requerido para Sequelize)
+    "emitDecoratorMetadata": true,              // Generar metadatos para decoradores
+    "baseUrl": "./",                             // Punto base para resolver rutas relativas
+    "paths": {                                   // Configuración de alias
+      "@models/*": ["src/models/*"],
+      "@services/*": ["src/services/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@config/*": ["src/config/*"]
+    }
+  },
+  "include": ["src"],                            // Incluir la carpeta fuente
+  "exclude": ["node_modules", "dist"]           // Excluir dependencias y salida
+}
