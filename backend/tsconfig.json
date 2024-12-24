@@ -15,7 +15,8 @@
       "@models/*": ["src/models/*"],
       "@services/*": ["src/services/*"],
       "@controllers/*": ["src/controllers/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@utils/*": ["src/utils/*"]
     }
   },
   "include": ["src"],                            // Incluir la carpeta fuente
