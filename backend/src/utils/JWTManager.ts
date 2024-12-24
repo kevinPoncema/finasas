@@ -16,7 +16,7 @@ export class JWTManager {
     try {
       const token = jwt.sign(payload, this.secretKey, { expiresIn: this.expiresIn });
       return token;
-    } catch (error) {
+    } catch (error:any) {
       throw new Error(`Error al crear el token: ${error.message}`);
     }
   }
@@ -30,7 +30,7 @@ export class JWTManager {
     try {
       const decoded = jwt.verify(token, this.secretKey);
       return decoded as object;
-    } catch (error) {
+    } catch (error:any) {
       throw new Error(`Error al decodificar el token: ${error.message}`);
     }
   }

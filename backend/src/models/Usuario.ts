@@ -1,4 +1,3 @@
-// models/Usuario.ts
 import { Table, Column, Model, DataType, CreatedAt, UpdatedAt } from "sequelize-typescript";
 
 @Table({
@@ -11,7 +10,7 @@ export class Usuario extends Model {
     autoIncrement: true,
     primaryKey: true,
   })
-
+  id!: number;
 
   @Column({
     type: DataType.STRING(100),
@@ -32,7 +31,9 @@ export class Usuario extends Model {
   })
   contraseña!: string;
 
-
   @CreatedAt
   creado_en!: Date;
+
+  @UpdatedAt
+  actualizado_en!: Date;
 }

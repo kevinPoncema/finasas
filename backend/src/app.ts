@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import sequelize from "./config/database"; // Configuración de Sequelize
-import { Usuario } from "./models/Usuario";
-import { Subusuario } from "./models/Subusuario";
-import { Transaccion } from "./models/Transaccion";
+import sequelize from "@config/database"; // Configuración de Sequelize
+import { Usuario } from "@models/Usuario";
+import { Subusuario } from "@models/Subusuario";
+import { Transaccion } from "@models/Transaccion";
 
 // Cargar variables de entorno desde el archivo .env
 dotenv.config();
@@ -17,11 +17,6 @@ const PORT = process.env.PORT || 3000;
 // Middleware para parsear JSON
 app.use(express.json());
 
-// Ruta principal (ping-pong)
-app.get("/ping", (req: Request, res: Response) => {
-  res.status(200).json({ message: "pong" });
-});
-
 // Sincronizar modelos y conectar con la base de datos
 (async () => {
   try {
@@ -33,6 +28,10 @@ app.get("/ping", (req: Request, res: Response) => {
   }
 })();
 
+// Ruta principal (ping-pong)
+app.get("/ping", (req: Request, res: Response) => {
+  res.status(200).json({ message: "pong" });
+});
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
