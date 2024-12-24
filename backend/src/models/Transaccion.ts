@@ -13,14 +13,6 @@ export class Transaccion extends Model {
     autoIncrement: true,
     primaryKey: true,
   })
- 
-
-  @ForeignKey(() => Usuario)
-  @Column({
-    type: DataType.INTEGER,
-    allowNull: false,
-  })
-  usuario_principal!: number;
 
   @ForeignKey(() => Subusuario)
   @Column({

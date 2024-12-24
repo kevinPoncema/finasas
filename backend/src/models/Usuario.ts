@@ -32,11 +32,6 @@ export class Usuario extends Model {
   })
   contraseña!: string;
 
-  @Column({
-    type: DataType.STRING(500),
-    allowNull: true,
-  })
-  token!: string | null;
 
   @CreatedAt
   creado_en!: Date;
