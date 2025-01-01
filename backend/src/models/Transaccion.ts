@@ -1,11 +1,10 @@
-// models/Transaccion.ts
-import { Table, Column, Model, DataType, CreatedAt, ForeignKey } from "sequelize-typescript";
-import { Usuario } from "./Usuario";
+import { Table, Column, Model, DataType, CreatedAt, ForeignKey, BelongsTo } from "sequelize-typescript";
 import { Subusuario } from "./Subusuario";
 
 @Table({
   tableName: "transacciones",
   timestamps: true,
+  underscored: true, // Convierte camelCase a snake_case en columnas
 })
 export class Transaccion extends Model {
   @Column({
@@ -13,13 +12,17 @@ export class Transaccion extends Model {
     autoIncrement: true,
     primaryKey: true,
   })
+  transaccion_id!: number; // Nueva clave primaria
 
   @ForeignKey(() => Subusuario)
   @Column({
     type: DataType.INTEGER,
     allowNull: true,
   })
-  subusuario_id!: number | null;
+  subusuario_id!: number | null; // Clave foránea al modelo Subusuario
+
+  @BelongsTo(() => Subusuario)
+  subusuario!: Subusuario; // Define la relación con el modelo Subusuario
 
   @Column({
     type: DataType.ENUM("ingreso", "egreso"),
@@ -77,5 +80,8 @@ export class Transaccion extends Model {
   frecuencia!: "diaria" | "semanal" | "mensual" | "anual" | null;
 
   @CreatedAt
+  @Column({
+    field: 'creado_en', // Nombre explícito de la columna
+  })
   creado_en!: Date;
 }

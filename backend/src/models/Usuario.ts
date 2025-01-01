@@ -2,7 +2,8 @@ import { Table, Column, Model, DataType, CreatedAt, UpdatedAt } from "sequelize-
 
 @Table({
   tableName: "usuarios",
-  timestamps: true, // Esto maneja automáticamente createdAt y updatedAt
+  timestamps: true, // Maneja automáticamente createdAt y updatedAt
+  underscored: true, // Convierte camelCase a snake_case en columnas
 })
 export class Usuario extends Model {
   @Column({
@@ -10,7 +11,7 @@ export class Usuario extends Model {
     autoIncrement: true,
     primaryKey: true,
   })
-  id!: number;
+  usuario_id!: number; // Nueva columna agregada como identificador único
 
   @Column({
     type: DataType.STRING(100),
@@ -22,6 +23,9 @@ export class Usuario extends Model {
     type: DataType.STRING(255),
     allowNull: false,
     unique: true,
+    validate: {
+      isEmail: true, // Valida que el correo sea un formato válido
+    },
   })
   correo!: string;
 
@@ -32,8 +36,14 @@ export class Usuario extends Model {
   contraseña!: string;
 
   @CreatedAt
+  @Column({
+    field: 'creado_en', // Define explícitamente el nombre de la columna
+  })
   creado_en!: Date;
 
   @UpdatedAt
+  @Column({
+    field: 'actualizado_en', // Define explícitamente el nombre de la columna
+  })
   actualizado_en!: Date;
 }

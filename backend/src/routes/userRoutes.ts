@@ -1,12 +1,11 @@
 import { Router } from 'express';
-import {crearUsuario} from "@controllers/userControl"
-const router = Router();
+import {crearUsuario,actualizarUsuario} from "@controllers/userControl"
+const userRouter = Router();
 /**
  * Ruta para crear un usuario.
  * Método: POST
  * URL: /users
  */
-router.post('/users', crearUsuario);
-
-export default router;
-
+userRouter.post('/user', crearUsuario);
+userRouter.put("/user",actualizarUsuario)
+export default userRouter;

@@ -4,7 +4,7 @@ import sequelize from "@config/database"; // Configuración de Sequelize
 import { Usuario } from "@models/Usuario";
 import { Subusuario } from "@models/Subusuario";
 import { Transaccion } from "@models/Transaccion";
-
+import userRouter from "@routes/userRoutes"
 // Cargar variables de entorno desde el archivo .env
 dotenv.config();
 
@@ -32,6 +32,8 @@ app.use(express.json());
 app.get("/ping", (req: Request, res: Response) => {
   res.status(200).json({ message: "pong" });
 });
+
+app.use(userRouter)
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
