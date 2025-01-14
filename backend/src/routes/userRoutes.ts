@@ -1,11 +1,28 @@
 import { Router } from 'express';
-import {crearUsuario,actualizarUsuario} from "@controllers/userControl"
+import { crearUsuario, actualizarUsuario, logInUsario } from '@controllers/userControl';
+import authMiddleware from '@middlewares/Auth';
+
 const userRouter = Router();
+
 /**
  * Ruta para crear un usuario.
  * Método: POST
  * URL: /users
  */
 userRouter.post('/user', crearUsuario);
-userRouter.put("/user",actualizarUsuario)
+
+/**
+ * Ruta para actualizar un usuario.
+ * Método: PUT
+ * URL: /user
+ */
+userRouter.put('/user', authMiddleware, actualizarUsuario);
+
+/**
+ * Ruta para el inicio de sesión de un usuario.
+ * Método: POST
+ * URL: /login
+ */
+userRouter.post('/login', logInUsario);
+
 export default userRouter;

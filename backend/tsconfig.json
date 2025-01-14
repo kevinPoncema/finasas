@@ -17,7 +17,11 @@
       "@controllers/*": ["src/controllers/*"],
       "@config/*": ["src/config/*"],
       "@utils/*": ["src/utils/*"],
-      "@routes/*": ["src/routes/*"]
+      "@routes/*": ["src/routes/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+      "@tests/*": ["src/tests/*"],
+
+
     }
   },
   "include": ["src"],                            // Incluir la carpeta fuente

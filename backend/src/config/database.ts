@@ -11,7 +11,7 @@ const sequelize = new Sequelize({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME, 
   models: [path.join(__dirname, "../models")], // Ruta a los modelos
-  logging: console.log, // Puedes desactivar los logs con `false`
+  logging:false, //console.log, // Puedes desactivar los logs con `false`
 });
 
 export default sequelize;

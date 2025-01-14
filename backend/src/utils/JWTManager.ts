@@ -16,6 +16,7 @@ export class JWTManager {
     try {
       const token = jwt.sign(payload, this.secretKey, { expiresIn: this.expiresIn });
       return token;
+      console.log(payload)
     } catch (error:any) {
       throw new Error(`Error al crear el token: ${error.message}`);
     }
