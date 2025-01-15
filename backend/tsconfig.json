@@ -1,17 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES2022",                           // Nivel de salida para el código JS (ES2022 para decoradores modernos)
-    "module": "CommonJS",                         // Sistema de módulos utilizado
-    "rootDir": "src",                             // Carpeta raíz del código TS
-    "outDir": "dist",                             // Carpeta de salida del código compilado
-    "moduleResolution": "node",                  // Resolución de módulos estilo Node.js
-    "strict": true,                              // Habilitar modo estricto
-    "esModuleInterop": true,                     // Permitir importaciones de módulos comunes
-    "skipLibCheck": true,                        // Ignorar el chequeo de tipos en librerías externas
-    "experimentalDecorators": true,             // Habilitar decoradores (requerido para Sequelize)
-    "emitDecoratorMetadata": true,              // Generar metadatos para decoradores
-    "baseUrl": "./",                             // Punto base para resolver rutas relativas
-    "paths": {                                   // Configuración de alias
+    "target": "ES2022",
+    "module": "CommonJS",
+    "rootDir": "src",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./",
+    "paths": {
       "@models/*": ["src/models/*"],
       "@services/*": ["src/services/*"],
       "@controllers/*": ["src/controllers/*"],
@@ -19,11 +19,9 @@
       "@utils/*": ["src/utils/*"],
       "@routes/*": ["src/routes/*"],
       "@middlewares/*": ["src/middlewares/*"],
-      "@tests/*": ["src/tests/*"],
-
-
+      "@tests/*": ["src/tests/*"]
     }
   },
-  "include": ["src"],                            // Incluir la carpeta fuente
-  "exclude": ["node_modules", "dist"]           // Excluir dependencias y salida
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

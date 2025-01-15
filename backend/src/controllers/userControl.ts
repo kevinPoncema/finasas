@@ -27,9 +27,10 @@ export const crearUsuario = async (req: Request, res: Response): Promise<void> =
     });
 
     if (correoExistente) {
-      return res.status(400).json({
+      res.status(400).json({
         message: "El correo electrónico ya está en uso.",
       });
+      return
     }
 
     // Encriptar la contraseña
@@ -43,9 +44,9 @@ export const crearUsuario = async (req: Request, res: Response): Promise<void> =
 
     // Generar el token de autenticación
     const token = JWTManager.createToken({
-      id: nuevoUsuario.usuario_id,
-      nombre: nuevoUsuario.nombre,
-      correo: nuevoUsuario.correo,
+      id: nuevoUsuario.dataValues.usuario_id,
+      nombre: nuevoUsuario.dataValues.nombre,
+      correo: nuevoUsuario.dataValues.correo,
     });
 
     res.status(201).json({
@@ -72,13 +73,8 @@ export const crearUsuario = async (req: Request, res: Response): Promise<void> =
 export const actualizarUsuario = async (req: Request, res: Response): Promise<void> => {
   try {
     // Obtener el ID del usuario desde el token
-   
     const { tokenData, ...rest } = req.body;
-    req.body = rest; // Asigna el resto al cuerpo de la solicitud
-
-    if (!tokenData.id) {
-      return res.status(400).json({ message: "El ID del usuario es obligatorio." });
-    }
+    req.body = rest; // Asignar el resto al cuerpo de la solicitud
 
     // Validar el cuerpo de la solicitud (permitir campos opcionales)
     const validatedData = usuarioSchema.partial().parse(req.body);
@@ -87,19 +83,24 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
     const usuarioExistente = await Usuario.findByPk(tokenData.id);
 
     if (!usuarioExistente) {
-      return res.status(404).json({ message: "Usuario no encontrado." });
+    res.status(404).json({ message: "Usuario no encontrado." });
+    return
     }
 
-    // Verificar si el correo ya está siendo usado por otro usuario
-    if (validatedData.correo && validatedData.correo !== usuarioExistente.correo) {
+
+    if (
+      validatedData.correo && // Si se está actualizando el correo
+      validatedData.correo !== usuarioExistente.dataValues.correo // Y es diferente del actual
+    ) {
       const correoExistente = await Usuario.findOne({
         where: { correo: validatedData.correo }
       });
 
       if (correoExistente) {
-        return res.status(400).json({
+        res.status(400).json({
           message: "El correo electrónico ya está en uso.",
         });
+        return
       }
     }
 
@@ -115,7 +116,7 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
     const token = JWTManager.createToken({
       id: usuarioExistente.usuario_id,
       nombre: usuarioExistente.nombre,
-      correo: usuarioExistente.correo,
+      correo: validatedData.correo || usuarioExistente.correo, // Tomar el nuevo correo o el existente
     });
 
     res.status(200).json({
@@ -129,6 +130,7 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
         message: "Error en la solicitud.",
         errors: error.errors,
       });
+      
     } else {
       // Manejar otros errores
       res.status(500).json({
@@ -138,6 +140,7 @@ export const actualizarUsuario = async (req: Request, res: Response): Promise<vo
     }
   }
 };
+
 
 
 export const logInUsario = async (req: Request, res: Response): Promise<void> => {
@@ -155,23 +158,24 @@ export const logInUsario = async (req: Request, res: Response): Promise<void> =>
 
     // Si el usuario no se encuentra
     if (!usuario) {
-      return res.status(404).json({
+      res.status(404).json({
         message: "Usuario no encontrado",
       });
+      return
     }
     // Comparar la contraseña proporcionada con la almacenada (encriptada) en la base de datos
     const contraseñaValida = await verifyPassword(contraseña,usuario.dataValues.contraseña);
-    console.log(contraseñaValida)
     if (!contraseñaValida) {
-      return res.status(401).json({
+      res.status(401).json({
         message: "Contraseña incorrecta",
       });
+      return
     }
 
     // Generar el token de autenticación
     const token = JWTManager.createToken({
-      id: usuario.usuario_id,
-      correo: usuario.correo,
+      id: usuario.dataValues.usuario_id,
+      correo: usuario.dataValues.correo,
     });
 
     // Responder con el token
@@ -191,5 +195,30 @@ export const logInUsario = async (req: Request, res: Response): Promise<void> =>
         error: error.message,
       });
     }
+  }
+};
+
+export const eliminarUsuario = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Obtener el ID del usuario desde los parámetros de la solicitud
+    const { id } = req.body.tokenData;
+
+    // Verificar si el usuario existe
+    const usuario = await Usuario.findByPk(id);
+
+    if (!usuario) {
+      res.status(404).json({ message: "Usuario no encontrado." });
+      return
+    }
+
+    // Eliminar el registro
+    await usuario.destroy();
+
+    res.status(200).json({ message: "Usuario eliminado exitosamente." });
+  } catch (error: any) {
+    res.status(500).json({
+      message: "Error al eliminar el usuario.",
+      error: error.message,
+    });
   }
 };

@@ -5,7 +5,8 @@ async function authMidleware(req:Request,res:Response,next:NextFunction) : Promi
     const token = req.headers.authorization?.split(' ')[1]; // Extraer el token Bearer
 
     if (!token) {
-      return res.status(401).json({ message: 'Token no proporcionado' });
+      res.status(401).json({ message: 'Token no proporcionado' });
+      return
     }
   
     try {
@@ -15,7 +16,8 @@ async function authMidleware(req:Request,res:Response,next:NextFunction) : Promi
      //console.log(decoded)
       next();
     } catch (error) {
-      return res.status(403).json({ message: 'Token inválido o expirado' });
+      res.status(403).json({ message: 'Token inválido o expirado' });
+      return
     }
 }
 

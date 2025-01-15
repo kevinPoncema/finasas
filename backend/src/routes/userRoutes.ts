@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { crearUsuario, actualizarUsuario, logInUsario } from '@controllers/userControl';
+import { crearUsuario, actualizarUsuario, logInUsario,eliminarUsuario} from '@controllers/userControl';
 import authMiddleware from '@middlewares/Auth';
 
 const userRouter = Router();
@@ -24,5 +24,7 @@ userRouter.put('/user', authMiddleware, actualizarUsuario);
  * URL: /login
  */
 userRouter.post('/login', logInUsario);
+
+userRouter.delete('/user', authMiddleware, eliminarUsuario);
 
 export default userRouter;

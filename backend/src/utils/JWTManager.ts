@@ -13,6 +13,9 @@ export class JWTManager {
    */
 
   public static createToken(payload: object): string {
+    if (!this.secretKey) {
+      throw new Error("La clave secreta no está definida");
+    }
     try {
       const token = jwt.sign(payload, this.secretKey, { expiresIn: this.expiresIn });
       return token;
@@ -29,6 +32,9 @@ export class JWTManager {
    */
   public static decodeToken(token: string): object {
     try {
+      if (!this.secretKey) {
+        throw new Error("La clave secreta no está definida");
+      }
       const decoded = jwt.verify(token, this.secretKey);
       return decoded as object;
     } catch (error:any) {
