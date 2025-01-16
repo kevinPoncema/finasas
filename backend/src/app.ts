@@ -5,6 +5,7 @@ import { Usuario } from "@models/Usuario";
 import { Subusuario } from "@models/Subusuario";
 import { Transaccion } from "@models/Transaccion";
 import userRouter from "@routes/userRoutes"
+import subUserRouter from "@routes/subUserRoutes"
 // Cargar variables de entorno desde el archivo .env
 dotenv.config();
 
@@ -21,7 +22,7 @@ app.use(express.json());
 (async () => {
   try {
     await sequelize.addModels([Usuario, Subusuario, Transaccion]); // Añadir los modelos
-    await sequelize.sync({ alter: true }); // alter: true actualiza tablas sin perder datos
+    //await sequelize.sync({ alter: true }); // alter: true actualiza tablas sin perder datos
     console.log("Base de datos sincronizada correctamente.");
   } catch (error) {
     console.error("Error al sincronizar la base de datos:", error);
@@ -34,6 +35,7 @@ app.get("/ping", (req: Request, res: Response) => {
 });
 
 app.use(userRouter)
+app.use(subUserRouter)
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

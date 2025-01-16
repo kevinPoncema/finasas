@@ -30,12 +30,12 @@ export const crearUsuario = async (req: Request, res: Response): Promise<void> =
     const nuevoUsuario = await Usuario.create({
       correo: validatedData.correo,
       contraseña: encrytedPassword,
+      nombre:validatedData.nombre
     });
 
-    // Generar el token de autenticación
-    const token = JWTManager.createToken({
+     // Generar el token de autenticación
+      const token = JWTManager.createToken({
       id: nuevoUsuario.dataValues.usuario_id,
-      nombre: nuevoUsuario.dataValues.nombre,
       correo: nuevoUsuario.dataValues.correo,
     });
 

@@ -32,6 +32,7 @@ export const crearSubUsuario = async (req: Request, res: Response): Promise<void
     const encrytedPassword = await hashPassword(validatedData.contraseña); // Asegúrate de usar el campo correcto
 
     // Crear el subusuario
+    console.log("TokentGood",tokenData)
     const su = await Subusuario.create({
       nombre: validatedData.nombre,
       correo: validatedData.correo,
