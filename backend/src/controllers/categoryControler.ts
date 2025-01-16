@@ -15,6 +15,7 @@ export const crearCategoria = async (req: Request, res: Response): Promise<void>
     const validatedData = CategoriaSchema.parse(req.body);
 
     // Crear la categoría
+    console.log(tokenData)
     const categoria = await Categoria.create({
       nombre: validatedData.nombre,
       subusuario_id: tokenData.subusuario_id, // Asignar el subusuario_id desde el token

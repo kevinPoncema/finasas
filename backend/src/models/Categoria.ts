@@ -17,7 +17,6 @@ export class Categoria extends Model {
   @Column({
     type: DataType.STRING(100),
     allowNull: false,
-    unique: true, // Asegura que el nombre sea único
   })
   nombre!: string;
 
