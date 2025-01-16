@@ -22,7 +22,7 @@ app.use(express.json());
 (async () => {
   try {
     await sequelize.addModels([Usuario, Subusuario, Transaccion]); // Añadir los modelos
-    //await sequelize.sync({ alter: true }); // alter: true actualiza tablas sin perder datos
+    await sequelize.sync({ alter: false }); // alter: true actualiza tablas sin perder datos
     console.log("Base de datos sincronizada correctamente.");
   } catch (error) {
     console.error("Error al sincronizar la base de datos:", error);
