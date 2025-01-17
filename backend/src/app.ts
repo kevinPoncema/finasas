@@ -7,6 +7,7 @@ import { Transaccion } from "@models/Transaccion";
 import userRouter from "@routes/userRoutes"
 import subUserRouter from "@routes/subUserRoutes"
 import categoriaRouter from "@routes/categoryRoutes."
+import transacciones from "@routes/transaccionesRoutes"
 // Cargar variables de entorno desde el archivo .env
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.get("/ping", (req: Request, res: Response) => {
 app.use(userRouter)
 app.use(subUserRouter)
 app.use(categoriaRouter)
+app.use(transacciones)
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

@@ -54,12 +54,6 @@ export class Transaccion extends Model {
   })
   descripción!: string | null;
 
-  // Fecha de la transacción
-  @Column({
-    type: DataType.DATE,
-    allowNull: false,
-  })
-  fecha!: Date;
 
   // Relación con Categoría
   @ForeignKey(() => Categoria)
@@ -71,13 +65,6 @@ export class Transaccion extends Model {
 
   @BelongsTo(() => Categoria)
   categoria!: Categoria; // Relación con Categoria
-
-  // Etiquetas asociadas a la transacción
-  @Column({
-    type: DataType.STRING(255),
-    allowNull: true,
-  })
-  etiquetas!: string | null;
 
   // Si la transacción es recurrente
   @Column({

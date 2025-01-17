@@ -4,7 +4,7 @@ dotenv.config();
 
 export class JWTManager {
   private static secretKey =process.env.TOKENT_SECRET_KEY; // Cambia esto por una clave segura
-  private static expiresIn = '1h'; // Cambia esto según el tiempo de expiración deseado
+  private static expiresIn = '12h'; // Cambia esto según el tiempo de expiración deseado
 
   /**
    * Crea un token JWT basado en el payload proporcionado.
