@@ -75,8 +75,8 @@ export const crearTransaccion = async (req: Request, res: Response): Promise<voi
     const nuevaTransaccion = await Transaccion.create({
       tipo: data.tipo,
       monto: data.monto,
-      título: data.titulo,
-      descripción: data.descripcion || null,
+      titulo: data.titulo,
+      descripcion: data.descripcion || null,
       categoria_id: data.categoriaId || null,
       subusuario_id: tokenData.subusuario_id,
       recurrente: false,
@@ -122,8 +122,8 @@ export const actualizarTransaccion = async (req: Request, res: Response): Promis
     await transaccion.update({
       tipo: data.tipo,
       monto: data.monto,
-      título: data.titulo,
-      descripción: data.descripcion || null,
+      titulo: data.titulo,
+      descripcion: data.descripcion || null,
       categoria_id: data.categoriaId,
     });
 

@@ -45,14 +45,14 @@ export class Transaccion extends Model {
     type: DataType.STRING(255),
     allowNull: false,
   })
-  título!: string;
+  titulo!: string;
 
   // Descripción de la transacción
   @Column({
     type: DataType.TEXT,
     allowNull: true,
   })
-  descripción!: string | null;
+  descripcion!: string | null;
 
 
   // Relación con Categoría
@@ -66,20 +66,6 @@ export class Transaccion extends Model {
   @BelongsTo(() => Categoria)
   categoria!: Categoria; // Relación con Categoria
 
-  // Si la transacción es recurrente
-  @Column({
-    type: DataType.BOOLEAN,
-    allowNull: false,
-    defaultValue: false,
-  })
-  recurrente!: boolean;
-
-  // Frecuencia de la recurrencia (diaria, semanal, etc.)
-  @Column({
-    type: DataType.ENUM("diaria", "semanal", "mensual", "anual"),
-    allowNull: true,
-  })
-  frecuencia!: "diaria" | "semanal" | "mensual" | "anual" | null;
 
   // Tiempos de creación y actualización
   @CreatedAt
