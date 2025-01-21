@@ -27,3 +27,31 @@ export const transaccionSchema = z.object({
     required_error: "El ID de la categoría es obligatorio.",
   }).int("El ID de la categoría debe ser un número entero.").optional(),
 });
+
+export const transaccionProgramadaSchema = z.object({
+  tipo: z.enum(["ingreso", "egreso"], {
+    required_error: "El tipo es obligatorio y debe ser 'ingreso' o 'egreso'.",
+  }),
+  titulo: z.string().min(1, "El título es obligatorio."),
+  descripcion: z.string().optional(),
+  monto: z.number().positive("El monto debe ser un número positivo."),
+  categoriaId: z.number({
+    required_error: "El ID de la categoría es obligatorio.",
+  }).int("El ID de la categoría debe ser un número entero.").optional(),
+  
+  // Campos adicionales para la transacción programada
+  recurrente: z.boolean({
+    required_error: "El campo 'recurrente' es obligatorio.",
+  }),
+  fecha: z.string({
+    required_error: "La fecha es obligatoria.",
+  }),
+
+  periodo: z.enum(["diario", "semanal", "mensual", "anual", "15enal"], {
+    required_error: "El periodo es obligatorio y debe ser uno de los siguientes: 'diario', 'semanal', 'mensual', 'anual', '15enal'.",
+  }),
+
+  cantidadRepeticiones: z.number().int().positive().optional().nullable().refine(val => val === null || val > 0, {
+    message: "La cantidad de repeticiones debe ser un número positivo o nulo para repeticiones indefinidas.",
+  }),
+});
