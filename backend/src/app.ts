@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import sequelize from "@config/database"; // Configuración de Sequelize
+import cors from "cors";
 import { Usuario } from "@models/Usuario";
 import { Subusuario } from "@models/Subusuario";
 import { Transaccion } from "@models/Transaccion";
@@ -9,6 +10,8 @@ import subUserRouter from "@routes/subUserRoutes"
 import categoriaRouter from "@routes/categoryRoutes."
 import transacciones from "@routes/transaccionesRoutes"
 import programerTranssaccionRouter from "@routes/TransaccionProgramadaRouter"
+import {StatisticsRouter} from "@routes/StatisticsRouter"
+
 // Cargar variables de entorno desde el archivo .env
 dotenv.config();
 
@@ -20,7 +23,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware para parsear JSON
 app.use(express.json());
-
+app.use(cors());
 // Sincronizar modelos y conectar con la base de datos
 (async () => {
   try {
@@ -41,6 +44,7 @@ app.use(userRouter)
 app.use(subUserRouter)
 app.use(categoriaRouter)
 app.use(transacciones)
+app.use(StatisticsRouter)
 app.use(programerTranssaccionRouter)
 // Iniciar servidor
 app.listen(PORT, () => {

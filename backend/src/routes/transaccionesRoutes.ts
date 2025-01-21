@@ -8,11 +8,11 @@ import {
   obtenerTransacciones,
 } from "@controllers/transaccionController";
 
-import {obtenerTotales} from "@controllers/StatisticsController"
+
 const transaccionesRoutes = Router();
 transaccionesRoutes.get("/transacciones/:fechaInicio/:fechaFin",authMiddleware,obtenerTransacciones)
 
-transaccionesRoutes.get("/totales",authMiddleware,obtenerTotales)
+
 // Crear una transacción
 transaccionesRoutes.post("/transacciones", authMiddleware,crearTransaccion);
 
