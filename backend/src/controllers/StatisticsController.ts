@@ -1,3 +1,4 @@
+import { obtenerPresupuestos } from './presupuestoController';
 import { Request, Response } from "express";
 import {ControlTotales} from "@models/ControlTotales"
 import {Transaccion} from "@models/Transaccion"
@@ -6,8 +7,7 @@ import sequelize from "@config/database";
 import { Op } from "sequelize";
 import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
-import fs from "fs";
-
+import Presupuesto from '@models/presupuesto'; // Para manejar rangos de fechas
 export const obtenerTotales = async (req: Request, res: Response): Promise<void> => {
     try {
       // Obtener el subusuario_id del token
@@ -35,11 +35,61 @@ export const obtenerTotales = async (req: Request, res: Response): Promise<void>
       res.status(200).json({
         total_ingresos: Number(controlTotales.dataValues.total_ingresos),
         total_egresos: Number(controlTotales.dataValues.total_egresos),
+        total_presupuesto_previsto: Number(controlTotales.dataValues.total_presupuesto_previsto),
         total_general: totalGeneral,
       });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error al obtener los totales." });
+    }
+  };
+
+  //obtiene los porcentajes de los montos por categoria
+  export const balancePresupuesto = async (req: Request, res: Response): Promise<void> => {
+    try {
+      // Obtener el subusuario_id del token
+      const { tokenData } = req.body;
+      if (!tokenData?.subusuario_id) {
+        res.status(400).json({ error: "No autenticado como subusuario" });
+        return;
+      }
+  
+      // Buscar el control total para el subusuario
+      const controlTotales = await ControlTotales.findOne({
+        where: { subusuario_id: tokenData.subusuario_id },
+      });
+  
+      // Verificar si existe un registro en control_totales para ese subusuario
+      if (!controlTotales) {
+        res.status(404).json({ error: "No se encontraron totales para este subusuario." });
+        return;
+      }
+  
+      // Calcular el rango del mes actual
+      const now = new Date();
+      const inicioMes = new Date(now.getFullYear(), now.getMonth(), 1); // Primer día del mes actual
+      const finMes = new Date(now.getFullYear(), now.getMonth() + 1, 0); // Último día del mes actual
+  
+      // Consultar el regreso mensual (ingresos del mes actual)
+      const egresoMensuales = await Transaccion.sum("monto", {
+        where: {
+          subusuario_id: tokenData.subusuario_id,
+          tipo: "egreso", // Solo considerar egreso
+          creado_en: {
+            [Op.between]: [inicioMes, finMes], // Entre el inicio y fin del mes
+          },
+        },
+      });
+      // Responder con los totales y el regreso mensual
+      res.status(200).json({
+        total_ingresos: Number(controlTotales.dataValues.total_ingresos),
+        total_egresos: Number(controlTotales.dataValues.total_egresos),
+        total_presupuesto_previsto: Number(controlTotales.dataValues.total_presupuesto_previsto),
+        egreso_mensual: Number(egresoMensuales || 0), // Si no hay egreso, devolver 0
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error al obtener el balance del mes." });
     }
   };
 
@@ -184,6 +234,17 @@ const obtenerCategorias = async (fechaInicio: string, fechaFin: string, subusuar
   });
 };
 
+const obtenerPresupuestos = async (fechaInicio: string, fechaFin: string, subusuarioId: number) => {
+  return await Presupuesto.findAll({
+    where: {
+      subusuario_id: subusuarioId,
+      creado_en: {
+        [Op.between]: [new Date(fechaInicio), new Date(fechaFin)],
+      },
+    },
+  });
+};
+
 // Consulta para obtener ingresos o egresos
 const obtenerTransacciones = async (fechaInicio: string, fechaFin: string, tipo: "ingreso" | "egreso", subusuarioId: number) => {
   return await Transaccion.findAll({
@@ -231,9 +292,11 @@ export const exportDataExel = async (req: Request, res: Response): Promise<void>
     const ingresos = await obtenerTransacciones(fechaInicio as string, fechaFin as string, "ingreso", subusuarioId);
     const egresos = await obtenerTransacciones(fechaInicio as string, fechaFin as string, "egreso", subusuarioId);
     const estadisticas = await obtenerEstadisticas(fechaInicio as string, fechaFin as string, subusuarioId);
+    const articulos =await obtenerPresupuestos(fechaInicio as string, fechaFin as string, subusuarioId)
     // Crear workbook y hojas
     const workbook = new ExcelJS.Workbook();
     const hojaCategorias = workbook.addWorksheet("Categorías");
+    const hojaListaArituclos = workbook.addWorksheet("Lista de Articulos");
     const hojaIngresos = workbook.addWorksheet("Ingresos");
     const hojaEgresos = workbook.addWorksheet("Egresos");
     const hojaEstadisticas = workbook.addWorksheet("Estadísticas");
@@ -252,6 +315,20 @@ export const exportDataExel = async (req: Request, res: Response): Promise<void>
       });
     });
 
+    hojaListaArituclos.columns =[
+      { header: "ID", key: "id" },
+      { header: "Nombre", key: "nombre" },
+      { header: "Costo", key: "costo" },
+      {header:"Descripcion",key:"descripcion"}
+    ]
+    articulos.forEach((articulo)=>{
+      hojaListaArituclos.addRow({
+        id:articulo.dataValues.presupuesto_id,
+        nombre:articulo.dataValues.nombre,
+        costo:articulo.dataValues.costo,
+        descripcion:articulo.dataValues.descripcion
+      })
+    })
     // Agregar datos a la hoja Ingresos
     hojaIngresos.columns = [
       { header: "ID", key: "id" },
@@ -332,7 +409,7 @@ export const exportDataPDF = async (req: Request, res: Response): Promise<void> 
     const ingresos = await obtenerTransacciones(fechaInicio as string, fechaFin as string, "ingreso", subusuarioId);
     const egresos = await obtenerTransacciones(fechaInicio as string, fechaFin as string, "egreso", subusuarioId);
     const estadisticas = await obtenerEstadisticas(fechaInicio as string, fechaFin as string, subusuarioId);
-
+    const articulos =await obtenerPresupuestos(fechaInicio as string, fechaFin as string, subusuarioId)
     // Crear documento PDF
     const doc = new PDFDocument();
     const fileName = `Reporte_${fechaInicio}_a_${fechaFin}_subusuario_${subusuarioId}.pdf`;
@@ -354,6 +431,13 @@ export const exportDataPDF = async (req: Request, res: Response): Promise<void> 
       doc.fontSize(12).text(`- ID: ${categoria.dataValues.id}, Nombre: ${categoria.dataValues.nombre}, Fecha: ${categoria.dataValues.creado_en}`);
     });
     doc.moveDown();
+
+        // Categorías
+        doc.fontSize(14).text("Categorías:");
+        articulos.forEach((art) => {
+          doc.fontSize(12).text(`- ID: ${art.dataValues.presupuesto_id}, Nombre: ${art.dataValues.nombre}, Costo: ${art.dataValues.costo}, Descripcion ${art.dataValues.descripcion}`);
+        });
+        doc.moveDown()
 
     // Ingresos
     doc.fontSize(14).text("Ingresos:");

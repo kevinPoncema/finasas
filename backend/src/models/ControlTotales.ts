@@ -32,6 +32,14 @@ export class ControlTotales extends Model {
   })
   total_egresos!: number;
 
+    // Total de egresos
+    @Column({
+      type: DataType.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0,
+    })
+    total_presupuesto_previsto!: number;
+
   // Clave foránea a Subusuario
   @ForeignKey(() => Subusuario)
   @Column({

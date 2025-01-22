@@ -55,3 +55,17 @@ export const transaccionProgramadaSchema = z.object({
     message: "La cantidad de repeticiones debe ser un número positivo o nulo para repeticiones indefinidas.",
   }),
 });
+
+// Esquema de validación para el presupuesto
+export const presupuestoSchema = z.object({
+  nombre: z.string().min(1, "El nombre del presupuesto es obligatorio."),
+  costo: z
+    .number()
+    .positive("El costo debe ser un valor positivo.")
+    .min(0.01, "El costo debe ser mayor a 0."),
+  descripcion: z.string().optional(), // Descripción es opcional
+  categoriaId: z
+    .number()
+    .int("El id de categoría debe ser un número entero.")
+    .optional() // La categoría es opcional, puede ser null
+});
