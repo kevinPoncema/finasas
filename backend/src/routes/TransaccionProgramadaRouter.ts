@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { crearTP, obtenerTPs, actualizarTP, eliminarTP } from "@controllers/programerTranssaccionController";
+import { crearTP, obtenerTPs, actualizarTP, eliminarTP,filtrarTransaccionesProgramadas } from "@controllers/programerTranssaccionController";
 import authMiddleware from "@middlewares/Auth"
 const programerTranssaccionRouter = Router();
 
@@ -15,4 +15,7 @@ programerTranssaccionRouter.put("/transacciones-programadas/:transaccionesProgra
 // Ruta para eliminar una transacción programada
 programerTranssaccionRouter.delete("/transacciones-programadas/:transaccionesProgramadasId",authMiddleware, eliminarTP);
 
+// Ruta para filtrar transacciones programadas
+programerTranssaccionRouter.post("/transacciones-programadas/filtrar",authMiddleware,filtrarTransaccionesProgramadas
+  );
 export default programerTranssaccionRouter;

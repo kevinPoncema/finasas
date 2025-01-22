@@ -130,6 +130,87 @@ export const eliminarTP = async (req: Request, res: Response): Promise<void> => 
     res.status(500).json({ error: "Error al eliminar la transacción programada." });
   }
 };
+export const filtrarTransaccionesProgramadas = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      titulo,
+      descripcion,
+      tipo,
+      categoria_id,
+      recurrente,
+      fecha_inicio,
+      fecha_fin,
+      periodo,
+      order_by,
+      tokenData,
+    } = req.body;
+
+    // Verificar si el subusuario está autenticado
+    if (!tokenData || !tokenData.subusuario_id) {
+      res.status(401).json({ error: "No autenticado como subusuario." });
+      return;
+    }
+
+    // Construir los filtros dinámicamente
+    const filtros: any = { subusuario_id: tokenData.subusuario_id };
+
+    if (titulo) {
+      filtros.titulo = { [Op.like]: `%${titulo}%` }; // Coincidencia parcial en título
+    }
+
+    if (descripcion) {
+      filtros.descripcion = { [Op.like]: `%${descripcion}%` }; // Coincidencia parcial en descripción
+    }
+
+    if (tipo) {
+      filtros.tipo = tipo; // Filtrar por tipo ("ingreso" o "egreso")
+    }
+
+    if (categoria_id) {
+      filtros.categoria_id = categoria_id; // Filtrar por categoría
+    }
+
+    if (recurrente !== undefined) {
+      filtros.recurrente = recurrente; // Filtrar por recurrencia (true o false)
+    }
+
+    if (periodo) {
+      filtros.periodo = periodo; // Filtrar por periodo (diario, semanal, mensual, etc.)
+    }
+
+    if (fecha_inicio && fecha_fin) {
+      filtros.fecha = { [Op.between]: [new Date(fecha_inicio), new Date(fecha_fin)] }; // Filtrar por rango de fechas
+    } else if (fecha_inicio || fecha_fin) {
+      res.status(400).json({ error: "Debe proporcionar ambas fechas: fecha_inicio y fecha_fin." });
+      return;
+    }
+
+    // Construir el orden dinámicamente
+    const orden: any[] = [];
+    if (order_by === "mayor") {
+      orden.push(["monto", "DESC"]); // Ordenar por monto descendente
+    } else if (order_by === "menor") {
+      orden.push(["monto", "ASC"]); // Ordenar por monto ascendente
+    }
+
+    // Consultar transacciones programadas con los filtros y el orden construidos
+    const transaccionesProgramadas = await TransaccionProgramada.findAll({
+      where: filtros,
+      order: orden.length ? orden : [["creado_en", "ASC"]], // Ordenar por fecha de creación de forma predeterminada
+    });
+
+    // Verificar si se encontraron resultados
+    if (!transaccionesProgramadas.length) {
+      res.status(404).json({ error: "No se encontraron transacciones programadas con los criterios especificados." });
+      return;
+    }
+
+    res.status(200).json(transaccionesProgramadas);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al filtrar las transacciones programadas." });
+  }
+};
 
 function obtenerNuevaFecha(fecha: string, periodo: "diario" | "semanal" | "mensual" | "anual" | "15enal"): Date {
   const fechaOriginal = new Date(fecha); // Convertimos la fecha de entrada a un objeto Date

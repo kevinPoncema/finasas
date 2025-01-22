@@ -3,7 +3,8 @@ import {
   crearCategoria, 
   obtenerCategorias, 
   actualizarCategoria, 
-  eliminarCategoria 
+  eliminarCategoria,
+  filtrarCategoriasPorNombre 
 } from '@controllers/categoryControler';
 import authMiddleware from '@middlewares/Auth';
 
@@ -39,4 +40,6 @@ categoriaRouter.put('/categorias/:id', authMiddleware, actualizarCategoria);
  */
 categoriaRouter.delete('/categorias/:id', authMiddleware, eliminarCategoria);
 
+// Ruta para filtrar categorías por nombre
+categoriaRouter.post("/categorias/filtrar-por-nombre", authMiddleware, filtrarCategoriasPorNombre);
 export default categoriaRouter;

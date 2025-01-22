@@ -169,3 +169,64 @@ export const borrarTransaccion = async (req: Request, res: Response): Promise<vo
     res.status(500).json({ error: "Error al borrar la transacción." });
   }
 };
+
+
+
+export const filtrarTransacciones = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { descripcion, titulo, tipo, fecha_inicio, fecha_fin, order_by, tokenData } = req.body;
+
+    // Verificar si el subusuario está autenticado
+    if (!tokenData || !tokenData.subusuario_id) {
+      res.status(401).json({ error: "No autenticado como subusuario." });
+      return;
+    }
+
+    // Construir los filtros dinámicamente
+    const filtros: any = { subusuario_id: tokenData.subusuario_id };
+
+    if (descripcion) {
+      filtros.descripcion = { [Op.like]: `%${descripcion}%` }; // Coincidencia parcial en descripción
+    }
+
+    if (titulo) {
+      filtros.titulo = { [Op.like]: `%${titulo}%` }; // Coincidencia parcial en título
+    }
+
+    if (tipo) {
+      filtros.tipo = tipo; // Filtrar por tipo ("ingreso" o "egreso")
+    }
+
+    if (fecha_inicio && fecha_fin) {
+      filtros.creado_en = { [Op.between]: [new Date(fecha_inicio), new Date(fecha_fin)] }; // Rango de fechas
+    } else if (fecha_inicio || fecha_fin) {
+      res.status(400).json({ error: "Debe proporcionar ambas fechas: fecha_inicio y fecha_fin." });
+      return;
+    }
+
+    // Construir el orden dinámicamente
+    const orden: any[] = [];
+    if (order_by === "mayor") {
+      orden.push(["monto", "DESC"]); // Ordenar por monto descendente
+    } else if (order_by === "menor") {
+      orden.push(["monto", "ASC"]); // Ordenar por monto ascendente
+    }
+
+    // Consultar transacciones con los filtros y el orden construidos
+    const transacciones = await Transaccion.findAll({
+      where: filtros,
+      order: orden.length ? orden : [["creado_en", "ASC"]], // Ordenar por fecha si no se especifica `order_by`
+    });
+
+    // Verificar si se encontraron resultados
+    if (!transacciones.length) {
+      res.status(404).json({ error: "No se encontraron transacciones con los criterios especificados." });
+      return;
+    }
+
+    res.status(200).json(transacciones);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al filtrar las transacciones." });
+  }
+};

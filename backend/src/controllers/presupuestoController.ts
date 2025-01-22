@@ -185,3 +185,58 @@ export const obtenerPresupuestosPorCategoria = async (req: Request, res: Respons
     res.status(500).json({ error: "Error al obtener los presupuestos." });
     }
 };
+
+export const filtrarPresupuestos = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { descripcion, nombre, fecha_inicio, fecha_fin, order_by, tokenData } = req.body;
+
+    // Verificar si el subusuario está autenticado
+    if (!tokenData || !tokenData.subusuario_id) {
+      res.status(401).json({ error: "No autenticado como subusuario." });
+      return;
+    }
+
+    // Construir los filtros dinámicamente
+    const filtros: any = { subusuario_id: tokenData.subusuario_id };
+
+    if (descripcion) {
+      filtros.descripcion = { [Op.like]: `%${descripcion}%` }; // Coincidencia parcial en descripción
+    }
+
+    if (nombre) {
+      filtros.nombre = { [Op.like]: `%${nombre}%` }; // Coincidencia parcial en nombre
+    }
+
+    if (fecha_inicio && fecha_fin) {
+      filtros.creado_en = { [Op.between]: [new Date(fecha_inicio), new Date(fecha_fin)] }; // Rango de fechas
+    } else if (fecha_inicio || fecha_fin) {
+      res.status(400).json({ error: "Debe proporcionar ambas fechas: fecha_inicio y fecha_fin." });
+      return;
+    }
+
+    // Construir el orden dinámicamente
+    const orden: any[] = [];
+    if (order_by === "mayor") {
+      orden.push(["costo", "DESC"]); // Ordenar por costo descendente
+    } else if (order_by === "menor") {
+      orden.push(["costo", "ASC"]); // Ordenar por costo ascendente
+    }
+
+    // Consultar presupuestos con los filtros y el orden construidos
+    const presupuestos = await Presupuesto.findAll({
+      where: filtros,
+      order: orden.length ? orden : [["creado_en", "ASC"]], // Ordenar por fecha si no se especifica `order_by`
+    });
+
+    // Verificar si se encontraron resultados
+    if (!presupuestos.length) {
+      res.status(404).json({ error: "No se encontraron presupuestos con los criterios especificados." });
+      return;
+    }
+
+    res.status(200).json(presupuestos);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al filtrar los presupuestos." });
+  }
+};

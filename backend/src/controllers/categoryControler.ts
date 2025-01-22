@@ -156,3 +156,43 @@ export const eliminarCategoria = async (req: Request, res: Response): Promise<vo
     });
   }
 };
+
+export const filtrarCategoriasPorNombre = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { nombre, tokenData } = req.body;
+
+    // Verificar si el subusuario está autenticado
+    if (!tokenData || !tokenData.subusuario_id) {
+      res.status(401).json({ error: "No autenticado como subusuario." });
+      return;
+    }
+
+    // Validar que se proporcione un nombre para el filtro
+    if (!nombre) {
+      res.status(400).json({ error: "Debe proporcionar un nombre para filtrar las categorías." });
+      return;
+    }
+
+    // Filtrar categorías por nombre (coincidencia parcial, insensible a mayúsculas/minúsculas)
+    const categorias = await Categoria.findAll({
+      where: {
+        subusuario_id: tokenData.subusuario_id, // Filtrar por subusuario
+        nombre: {
+          [Op.iLike]: `%${nombre}%`, // Coincidencia parcial insensible a mayúsculas
+        },
+      },
+      order: [["nombre", "ASC"]], // Ordenar alfabéticamente por nombre
+    });
+
+    // Verificar si se encontraron categorías
+    if (!categorias.length) {
+      res.status(404).json({ error: "No se encontraron categorías con el nombre especificado." });
+      return;
+    }
+
+    res.status(200).json(categorias);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al filtrar las categorías." });
+  }
+};

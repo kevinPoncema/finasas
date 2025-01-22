@@ -6,6 +6,7 @@ import {
   actualizarTransaccion,
   borrarTransaccion,
   obtenerTransacciones,
+  filtrarTransacciones
 } from "@controllers/transaccionController";
 
 
@@ -18,8 +19,9 @@ transaccionesRoutes.post("/transacciones", authMiddleware,crearTransaccion);
 
 // Actualizar una transacción existente
 transaccionesRoutes.put("/transacciones/:id",authMiddleware, actualizarTransaccion);
-
-// Borrar una transacción
+// Ruta para filtrar transacciones
+transaccionesRoutes.post("/transacciones/filtrar", authMiddleware, filtrarTransacciones);
+// Borrar una transaccin
 transaccionesRoutes.delete("/transacciones/:id",authMiddleware, borrarTransaccion);
 
 export default transaccionesRoutes;

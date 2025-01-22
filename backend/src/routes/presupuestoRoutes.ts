@@ -7,6 +7,7 @@ import {
   actualizarPresupuesto,
   borrarPresupuesto,
   obtenerPresupuestosPorCategoria,
+  filtrarPresupuestos
 } from "@controllers/presupuestoController";
 
 const presupuestoRoutes = Router();
@@ -25,5 +26,8 @@ presupuestoRoutes.delete("/presupuestos/:id", authMiddleware, borrarPresupuesto)
 
 // Obtener presupuestos filtrados por categoría
 presupuestoRoutes.get("/presupuestos/categoria/:categoriaId", authMiddleware, obtenerPresupuestosPorCategoria);
+
+// Obtener presupuestos filtrados dinámicamente
+presupuestoRoutes.post("/presupuestos/filtrar", authMiddleware, filtrarPresupuestos);
 
 export default presupuestoRoutes;
