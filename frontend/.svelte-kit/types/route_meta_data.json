@@ -1,4 +1,8 @@
 {
 	"/": [],
+	"/api/register": [
+		"src/routes/api/register/+server.ts"
+	],
+	"/dashboard": [],
 	"/register": []
 }
