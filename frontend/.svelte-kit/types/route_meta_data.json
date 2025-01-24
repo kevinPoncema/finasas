@@ -3,6 +3,9 @@
 	"/api/register": [
 		"src/routes/api/register/+server.ts"
 	],
+	"/categorias": [],
 	"/dashboard": [],
-	"/register": []
+	"/presupuesto": [],
+	"/register": [],
+	"/transacciones": []
 }

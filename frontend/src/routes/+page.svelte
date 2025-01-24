@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { subuserLogin } from '$lib/fetchApis'; // Asegúrate de que la ruta sea correcta
+  import { subuserLogin } from '$lib/fetchs/CAtegoriaFetch'; // Asegúrate de que la ruta sea correcta
   import { onMount } from 'svelte';
 
   let email: string = '';

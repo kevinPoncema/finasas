@@ -3,16 +3,7 @@
     import SideMenu from "$lib/components/SideMenu.svelte";
     import { onMount } from "svelte";
     import type { UserData } from "$lib/apitypes";
-    import FilterBar from '$lib/components/FilterBar.svelte';
-    import type { Filter } from "$lib/apitypes"
-
-  
     let userData: UserData | null = null;
-    let filters: Filter[] = [
-    { name: "Fecha", type: "input", options: null },
-    { name: "Categoría", type: "select", options: ["Comida", "Transporte", "Salud"] }
-  ];
-
     onMount(() => {
       userData = authValidation();
       if (!userData) {
@@ -41,7 +32,6 @@
     <SideMenu>
       <!-- Contenido principal -->
       <div class="content">
-     <FilterBar filters={filters} />
       </div>
     </SideMenu>
   </main>

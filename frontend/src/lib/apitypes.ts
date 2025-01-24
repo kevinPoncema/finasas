@@ -61,6 +61,6 @@ export interface UserData {
 
 export interface Filter {
   name: string;
-  type: 'input' | 'select';
+  type: 'input' | 'select' | 'date';
   options: string[] | null;
 }
