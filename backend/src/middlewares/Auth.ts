@@ -11,7 +11,6 @@ async function authMidleware(req:Request,res:Response,next:NextFunction) : Promi
   
     try {
       const decoded = JWTManager.decodeToken(token)
-      console.log("decode",decoded)
       req.body.tokenData = decoded 
      //console.log(decoded)
       next();

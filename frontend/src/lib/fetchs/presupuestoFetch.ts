@@ -56,9 +56,9 @@ export async function getpresupuestos(token: string): Promise<Presupuesto[]> {
   }
 
   // Función para crear una categoría
-  export async function createpresupuesto(token: string, nombre: string,costo:number,descripcion:string,categoria_id:number): Promise<void> {
+  export async function createpresupuesto(token: string, nombre: string,costo:number,descripcion:string,categoriaId:number): Promise<void> {
     try {
-    
+      
       // Configuración de la solicitud POST
       const response = await fetch(`${baseUrl}/presupuestos`, {
         method: 'POST',
@@ -66,7 +66,7 @@ export async function getpresupuestos(token: string): Promise<Presupuesto[]> {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ nombre,costo,descripcion,categoria_id }), // Enviar el nombre en el cuerpo de la solicitud
+        body: JSON.stringify({ nombre,costo,descripcion,categoriaId }), // Enviar el nombre en el cuerpo de la solicitud
       });
   
       // Manejar la respuesta
@@ -85,8 +85,8 @@ export async function getpresupuestos(token: string): Promise<Presupuesto[]> {
     }
   }
 
- export async function Editepresupuestos(token: string, nombre: string,id:number,costo:number,descripcion:string,categoria_id:number): Promise<void> {
-   try {
+ export async function Editepresupuestos(token: string, nombre: string,id:number,costo:number,descripcion:string,categoriaId:number): Promise<void> {
+  try {
      // Validar que el nombre no esté vacío
      if (!nombre || nombre.trim() === "") {
        throw new Error("El nombre de la categoría no puede estar vacío.");
@@ -99,7 +99,7 @@ export async function getpresupuestos(token: string): Promise<Presupuesto[]> {
          'Authorization': `Bearer ${token}`,
          'Content-Type': 'application/json',
        },
-       body: JSON.stringify({ nombre,costo,descripcion,categoria_id }), // Enviar el nombre en el cuerpo de la solicitud
+       body: JSON.stringify({ nombre,costo,descripcion,categoriaId }), // Enviar el nombre en el cuerpo de la solicitud
      });
  
      // Manejar la respuesta

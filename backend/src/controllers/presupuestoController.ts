@@ -97,7 +97,7 @@ export const actualizarPresupuesto = async (req: Request, res: Response): Promis
       res.status(404).json({ error: "Presupuesto no encontrado o no autorizado." });
       return;
     }
-
+    console.log(data.categoriaId)
     // Actualizar el presupuesto
     await presupuesto.update({
       nombre: data.nombre,

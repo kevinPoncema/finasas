@@ -59,8 +59,12 @@ export interface UserData {
   createdAt: string;
 }
 
+export type option ={
+  nombre:string,
+  value:any
+}
 export interface Filter {
   name: string;
   type: 'input' | 'select' | 'date';
-  options: string[] | null;
+  options: option[] | null;
 }
