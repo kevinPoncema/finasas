@@ -182,7 +182,7 @@ export const obtenerPresupuestosPorCategoria = async (req: Request, res: Respons
 
 export const filtrarPresupuestos = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { descripcion, nombre, fecha_inicio, fecha_fin, order_by, tokenData } = req.body;
+    const { descripcion, nombre, fecha_inicio, fecha_fin, order_by, tokenData,costo,categoria_id } = req.body;
 
     // Verificar si el subusuario está autenticado
     if (!tokenData || !tokenData.subusuario_id) {
@@ -199,6 +199,14 @@ export const filtrarPresupuestos = async (req: Request, res: Response): Promise<
 
     if (nombre) {
       filtros.nombre = { [Op.like]: `%${nombre}%` }; // Coincidencia parcial en nombre
+    }
+
+    if (costo) {
+      filtros.costo = costo
+    }
+
+    if (categoria_id) {
+      filtros.categoria_id = categoria_id
     }
 
     if (fecha_inicio && fecha_fin) {

@@ -55,7 +55,7 @@
     }
 
     // Si todos los filtros son válidos, emite el evento o realiza alguna acción
-    console.log("Filtros listos para búsqueda:", formattedFilters);
+    //console.log("Filtros listos para búsqueda:", formattedFilters);
     searchEve(formattedFilters);
   };
 

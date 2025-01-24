@@ -5,6 +5,8 @@
 	],
 	"/categorias": [],
 	"/dashboard": [],
+	"/export/excel": [],
+	"/export/pdf": [],
 	"/presupuesto": [],
 	"/register": [],
 	"/transacciones-programadas": [],

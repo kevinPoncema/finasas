@@ -11,6 +11,7 @@
     deleteTransaccion,
     createTransaccion,
     editTransaccion,
+    filtrarTransacciones
   } from "$lib/fetchs/transacionesFetch";
   
   let userData: UserData | null = null;
@@ -29,8 +30,10 @@
   // Opciones de tipo
   const tipoOptions = ["Ingreso", "Egreso"];
   let filters: Filter[] = [
+    { name: "titulo", type: "input", options: null },
     { name: "descripcion", type: "input", options: null },
     { name: "monto", type: "input", options: null },
+    { name: "tipo", type: "select", options:[{nombre:"ingresos",value:"ingreso"},{nombre:"Egresos",value:"egreso"}] },
     { name: "categoria_id", type: "select", options: null }, // Filtro de categoría
   ];
 
@@ -43,8 +46,7 @@
           nombre: categoria.nombre,
           value: categoria.id,
         }));
-
-        filters[3].options = categoriasFiltradas;
+        filters[4].options = categoriasFiltradas;
         loading = false; // Cambiar el estado a "cargado"
       }
     } catch (error) {
@@ -154,14 +156,6 @@
     }
   };
 
-  const searchTransacciones = async (filterData: any) => {
-    if (filterData.length === 0) {
-      reloadData();
-      return;
-    }
-    console.log("Filtros aplicados:", filterData);
-  };
-
   // Función para buscar el nombre de la categoría por su ID
   const searchCate = (id: any) => {
     const categoria = categoriasFiltradas.find((categoria) => categoria.value === id);
@@ -170,6 +164,24 @@
     }
     return categoria.nombre;
   };
+
+  const search= async (filterData: any[]) => {
+  // Transformar el arreglo en un objeto con las propiedades y valores esperados
+  const transformedFilters = filterData.reduce((acc: any, curr: any) => {
+    acc[curr.name] = curr.value;
+    return acc;
+  }, {});
+
+  // Validar si no hay filtros
+  if (Object.keys(transformedFilters).length === 0) {
+    reloadData();
+    return;
+  }
+if (userData?.token) {
+  transaccionesLista= await filtrarTransacciones(userData.token,transformedFilters);
+  return
+}
+}
 </script>
 
 <main>
@@ -180,7 +192,7 @@
         alignment="right"
         itemName="Transacción"
         createItem={openCreateModal}
-        searchEve={searchTransacciones}
+        searchEve={search}
       />
       <br />
       <div class="p-6 bg-gray-50 min-h-screen">

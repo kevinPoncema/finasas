@@ -200,7 +200,7 @@ export const borrarTransaccion = async (req: Request, res: Response): Promise<vo
 
 export const filtrarTransacciones = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { descripcion, titulo, tipo, fecha_inicio, fecha_fin, order_by, tokenData } = req.body;
+    const { descripcion, titulo, tipo, fecha_inicio, fecha_fin, order_by, tokenData,categoria_id,monto } = req.body;
 
     // Verificar si el subusuario está autenticado
     if (!tokenData || !tokenData.subusuario_id) {
@@ -221,6 +221,13 @@ export const filtrarTransacciones = async (req: Request, res: Response): Promise
 
     if (tipo) {
       filtros.tipo = tipo; // Filtrar por tipo ("ingreso" o "egreso")
+    }
+    if (categoria_id) {
+      filtros.categoria_id = categoria_id
+    }
+
+    if (monto) {
+      filtros.monto = monto
     }
 
     if (fecha_inicio && fecha_fin) {

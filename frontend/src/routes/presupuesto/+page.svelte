@@ -11,6 +11,7 @@
     deltePresupuestos,
     createpresupuesto,
     Editepresupuestos,
+    Filtrarpresupuestos
   } from "$lib/fetchs/presupuestoFetch";
   import {createTransaccion} from "$lib/fetchs/transacionesFetch"
   import {getTotales} from "$lib/fetchs/estadisticasFetch"
@@ -40,7 +41,6 @@
         categoriaLista = await getCategorias(userData.token);
         const totales = await getTotales(userData.token)
         presupuestoPrevisto = totales?.total_presupuesto_previsto || 0
-        console.log(presupuestoPrevisto)
         categoriasFiltradas = categoriaLista.map((categoria) => ({
           nombre: categoria.nombre,
           value: categoria.id,
@@ -144,6 +144,24 @@
         alert(`se creo la transacion para ${presupuesto.nombre}`)
   };
 }
+
+const search= async (filterData: any[]) => {
+  // Transformar el arreglo en un objeto con las propiedades y valores esperados
+  const transformedFilters = filterData.reduce((acc: any, curr: any) => {
+    acc[curr.name] = curr.value;
+    return acc;
+  }, {});
+
+  // Validar si no hay filtros
+  if (Object.keys(transformedFilters).length === 0) {
+    reloadData();
+    return;
+  }
+if (userData?.token) {
+  presupuestosLista= await Filtrarpresupuestos(userData.token,transformedFilters);
+  return
+}
+};
 </script>
 
 <main>
@@ -152,9 +170,9 @@
       <FilterBar
         {filters}
         alignment="right"
-        itemName="Categoria"
-        crarITem={openCreateModal}
-        searchEve={searchCate}
+        itemName="Presupuesto"
+        createItem = {openCreateModal}
+        searchEve={search}
       />
       <br />
 

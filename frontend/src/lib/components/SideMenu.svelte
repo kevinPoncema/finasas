@@ -1,4 +1,5 @@
 <script lang="ts">
+
   export let position: 'left' | 'right' = 'left'; // Define si el menú aparece a la izquierda o derecha
   let isMenuOpen = false;
   let isExportSubmenuOpen = false;
