@@ -48,6 +48,32 @@ export const obtenerTransacciones = async (req: Request, res: Response): Promise
     }
   };
 
+  export const obtenerTransaccionesSinFechas = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { fechaInicio, fechaFin } = req.params;
+      const { tokenData } = req.body;
+  
+      // Validar token del subusuario
+      if (!tokenData || !tokenData.subusuario_id) {
+        res.status(401).json({ error: "No autenticado como subusuario." });
+        return
+      }
+  
+      // Consultar las transacciones del subusuario dentro del rango de fecha
+      const transacciones = await Transaccion.findAll({
+        where: {
+          subusuario_id: tokenData.subusuario_id,
+        },
+        order: [["creado_en", "ASC"]], // Ordenar por fecha ascendente
+      });
+  
+    res.status(200).json(transacciones);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Error al obtener las transacciones." });
+    }
+  };
+
 // Crear Transacción
 export const crearTransaccion = async (req: Request, res: Response): Promise<void> => {
   try {

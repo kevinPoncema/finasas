@@ -11,7 +11,7 @@ import categoriaRouter from "@routes/categoryRoutes."
 import transacciones from "@routes/transaccionesRoutes"
 import programerTranssaccionRouter from "@routes/TransaccionProgramadaRouter"
 import {StatisticsRouter} from "@routes/StatisticsRouter"
-
+import presupuestoRoutes from "@routes/presupuestoRoutes"
 // Cargar variables de entorno desde el archivo .env
 dotenv.config();
 
@@ -46,6 +46,7 @@ app.use(categoriaRouter)
 app.use(transacciones)
 app.use(StatisticsRouter)
 app.use(programerTranssaccionRouter)
+app.use(presupuestoRoutes)
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

@@ -17,17 +17,11 @@ export const obtenerPresupuestos = async (req: Request, res: Response): Promise<
       return;
     }
 
-    // Verificar que los parámetros necesarios están presentes
-    if (!categoriaId || !subusuarioId) {
-      res.status(400).json({ error: "El id de categoría y el id de subusuario son obligatorios." });
-      return;
-    }
 
     // Consultar los presupuestos filtrados por subusuario_id y categoria_id
     const presupuestos = await Presupuesto.findAll({
       where: {
-        subusuario_id: subusuarioId,
-        categoria_id: categoriaId,
+        subusuario_id: tokenData.subusuario_id,
       },
       order: [["creado_en", "ASC"]], // Ordenar por fecha de creación
     });

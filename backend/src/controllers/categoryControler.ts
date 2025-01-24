@@ -2,6 +2,7 @@ import { CategoriaSchema } from "./validateorsSchemas"; // Importar el schema de
 import { Request, Response } from "express";
 import { Categoria } from "@models/Categoria"; // Importar el modelo de Categoria
 import { Subusuario } from "@models/Subusuario"; // Importar el modelo de Subusuario
+import { Sequelize,Op } from "sequelize";
 import { z } from "zod";
 
 // Crear una nueva categoría
@@ -178,7 +179,7 @@ export const filtrarCategoriasPorNombre = async (req: Request, res: Response): P
       where: {
         subusuario_id: tokenData.subusuario_id, // Filtrar por subusuario
         nombre: {
-          [Op.iLike]: `%${nombre}%`, // Coincidencia parcial insensible a mayúsculas
+          [Op.like]: `%${nombre}%`, // Coincidencia parcial insensible a mayúsculas
         },
       },
       order: [["nombre", "ASC"]], // Ordenar alfabéticamente por nombre

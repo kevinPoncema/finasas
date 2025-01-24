@@ -6,14 +6,15 @@ import {
   actualizarTransaccion,
   borrarTransaccion,
   obtenerTransacciones,
-  filtrarTransacciones
+  filtrarTransacciones,
+  obtenerTransaccionesSinFechas
 } from "@controllers/transaccionController";
 
 
 const transaccionesRoutes = Router();
 transaccionesRoutes.get("/transacciones/:fechaInicio/:fechaFin",authMiddleware,obtenerTransacciones)
 
-
+transaccionesRoutes.get("/transacciones/",authMiddleware,obtenerTransaccionesSinFechas)
 // Crear una transacción
 transaccionesRoutes.post("/transacciones", authMiddleware,crearTransaccion);
 
