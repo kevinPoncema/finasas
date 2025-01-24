@@ -12,7 +12,8 @@
     createpresupuesto,
     Editepresupuestos,
   } from "$lib/fetchs/presupuestoFetch";
-
+  import {createTransaccion} from "$lib/fetchs/transacionesFetch"
+  import {getTotales} from "$lib/fetchs/estadisticasFetch"
   let userData: UserData | null = null;
   let presupuestosLista: Presupuesto[] = [];
   let categoriaLista: Categoria[] = [];
@@ -31,12 +32,15 @@
   ];
   let categoriasFiltradas: option[] = [];
   let loading = true; // Indicador de carga
-
+  let presupuestoPrevisto = 0
   const reloadData = async () => {
     try {
       if (userData?.token) {
         presupuestosLista = await getpresupuestos(userData.token);
         categoriaLista = await getCategorias(userData.token);
+        const totales = await getTotales(userData.token)
+        presupuestoPrevisto = totales?.total_presupuesto_previsto || 0
+        console.log(presupuestoPrevisto)
         categoriasFiltradas = categoriaLista.map((categoria) => ({
           nombre: categoria.nombre,
           value: categoria.id,
@@ -128,6 +132,18 @@
     }
     return categoria.nombre;
   };
+
+
+  const createTransaction = async (presupuesto: Presupuesto) => {
+    if (userData?.token) {
+        await createTransaccion(userData.token,presupuesto.nombre,
+        presupuesto.descripcion as string,
+        Number(presupuesto.costo),
+        "egreso"
+        ,presupuesto.categoria_id)
+        alert(`se creo la transacion para ${presupuesto.nombre}`)
+  };
+}
 </script>
 
 <main>
@@ -141,10 +157,21 @@
         searchEve={searchCate}
       />
       <br />
+
       <div class="p-6 bg-gray-50 min-h-screen">
         {#if loading}
           <p>Cargando...</p> <!-- Mensaje de carga -->
         {:else}
+        <div class="w-full max-w-sm mx-auto my-4">
+          <div class="bg-white p-6 rounded-lg shadow-lg border-4 border-orange-600">
+            <h3 class="text-xl font-bold text-gray-800">Presupuesto Previsto</h3>
+            <p class="text-lg text-gray-700 mt-2">
+              <span class="font-semibold">Monto:</span> { presupuestoPrevisto }
+            </p>
+          </div>
+        </div>
+        
+        <br>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {#each presupuestosLista as presupuesto (presupuesto.presupuesto_id)}
               <Card
@@ -165,6 +192,13 @@
                   <span class="font-bold">Categoría:</span>
                   {searchCate(presupuesto.categoria_id)}
                 </p>
+
+                <button
+                class="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                on:click={() => createTransaction(presupuesto)}
+              >
+                Crear Transacción
+              </button>
               </Card>
             {/each}
           </div>

@@ -68,3 +68,10 @@ export interface Filter {
   type: 'input' | 'select' | 'date';
   options: option[] | null;
 }
+
+export interface TotalesResponse {
+  total_ingresos: number;
+  total_egresos: number;
+  total_presupuesto_previsto: number;
+  total_general: number;
+}
