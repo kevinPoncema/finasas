@@ -47,9 +47,11 @@ export const transaccionProgramadaSchema = z.object({
     required_error: "La fecha es obligatoria.",
   }),
 
-  periodo: z.enum(["diario", "semanal", "mensual", "anual", "15enal"], {
+  periodo: z
+  .enum(["diario", "semanal", "mensual", "anual", "15enal"], {
     required_error: "El periodo es obligatorio y debe ser uno de los siguientes: 'diario', 'semanal', 'mensual', 'anual', '15enal'.",
-  }),
+  })
+  .nullable(), // Permitir que el periodo sea null
 
   cantidadRepeticiones: z.number().int().positive().optional().nullable().refine(val => val === null || val > 0, {
     message: "La cantidad de repeticiones debe ser un número positivo o nulo para repeticiones indefinidas.",

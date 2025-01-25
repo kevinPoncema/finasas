@@ -75,7 +75,7 @@ export default class TransaccionProgramada extends Model {
 
   // Fecha de inicio de la transacción programada
   @Column({
-    type: DataType.DATE,
+    type: DataType.DATEONLY,
     allowNull: false,
   })
   fecha!: Date;
@@ -83,7 +83,7 @@ export default class TransaccionProgramada extends Model {
   // Periodo de recurrencia (diario, semanal, mensual, anual)
   @Column({
     type: DataType.ENUM("diario", "semanal", "mensual", "anual", "15enal"),
-    allowNull: false,
+    allowNull: true,
   })
   periodo!: "diario" | "semanal" | "mensual" | "anual" | "15enal";
 
