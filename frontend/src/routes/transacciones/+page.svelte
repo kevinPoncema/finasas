@@ -2,6 +2,7 @@
   import authValidation from "$lib/helpers/authValidation";
   import SideMenu from "$lib/components/SideMenu.svelte";
   import { onMount } from "svelte";
+  import {formatDate}from "$lib/helpers/formatearFecha"
   import type { UserData, Transaccion, Filter, Categoria, option } from "$lib/apitypes";
   import FilterBar from "$lib/components/FilterBar.svelte";
   import Card from "$lib/components/Card.svelte";
@@ -34,7 +35,9 @@
     { name: "descripcion", type: "input", options: null },
     { name: "monto", type: "input", options: null },
     { name: "tipo", type: "select", options:[{nombre:"ingresos",value:"ingreso"},{nombre:"Egresos",value:"egreso"}] },
-    { name: "categoria_id", type: "select", options: null }, // Filtro de categoría
+    { name: "categoria_id", type: "select", options: null },
+    { name: "fecha_inicio", type: "date", options: null },
+    { name: "fecha_fin", type: "date", options: null },
   ];
 
   const reloadData = async () => {
@@ -225,6 +228,10 @@ if (userData?.token) {
                 <p class="text-lg">
                   <span class="font-bold">Categoría:</span> 
                   {searchCate(transaccion.categoria_id)}
+                </p>
+                <p class="text-lg">
+                  <span class="font-bold">fecha de creación:</span>
+                  {formatDate(transaccion.creado_en)}
                 </p>
               </Card>
             {/each}

@@ -1,5 +1,6 @@
 <script lang="ts">
   import authValidation from "$lib/helpers/authValidation";
+  import {formatearFechaDMA,formatFechaISO,formatDate} from "$lib/helpers/formatearFecha"
   import SideMenu from "$lib/components/SideMenu.svelte";
   import { onMount } from "svelte";
   import type { UserData, TransaccionProgramada, Filter, Categoria, option } from "$lib/apitypes";
@@ -11,6 +12,7 @@
     deleteTransaccionProgramada,
     createTransaccionProgramada,
     editTransaccionProgramada,
+    filtrarTp
   } from "$lib/fetchs/tpFetch";
 
   let userData: UserData | null = null;
@@ -23,10 +25,10 @@
   let categoriaId = 0; 
   let tipo = "ingreso"; 
   let titulo = ""; 
-  let fecha = new Date(); 
+  let fecha = ""; 
   let periodo = "diario"; 
   let cantidadRepeticiones = 0; 
-  let recurrente = false;  // Nuevo campo recurrente
+  let recurrente = false;
   let editeID: number | null = null;
 
   const tipoOptions = ["ingreso", "egreso"];
@@ -36,10 +38,16 @@
   let loading = true; // Indicador de carga
   let filters: Filter[] = [
     { name: "titulo", type: "input", options: null },
+    { name: "fecha_inicio", type: "date", options: null },
+    { name: "fecha_fin", type: "date", options: null },
     { name: "descripcion", type: "input", options: null },
     { name: "monto", type: "input", options: null },
     { name: "tipo", type: "select", options: [{nombre: "ingresos", value: "ingreso"}, {nombre: "Egresos", value: "egreso"}] },
-    { name: "categoria_id", type: "select", options: null }, // Filtro de categoría
+    { name: "categoria_id", type: "select", options: null },
+    {name: "periodo",type: "select",options: [{ nombre: "Ingresos", value: "ingreso" },{ nombre: "Egresos", value: "egreso" },
+    { nombre: "Diario", value: "diario" },{ nombre: "Semanal", value: "semanal" },
+    { nombre: "Mensual", value: "mensual" },{ nombre: "Anual", value: "anual" },{ nombre: "15enal", value: "15enal" }]},
+    { name: "recurrente", type: "select", options: [{nombre:"si",value:true},{nombre:"no",value:false}] },
   ];
 
   const reloadData = async () => {
@@ -80,7 +88,7 @@
       monto = transaccionProgramada.monto;
       categoriaId = transaccionProgramada.categoria_id || 0;
       tipo = transaccionProgramada.tipo;
-      fecha = new Date(transaccionProgramada.fecha);
+      fecha =transaccionProgramada.fecha
       console.log(transaccionProgramada.fecha,fecha)
       periodo = transaccionProgramada.periodo;
       cantidadRepeticiones = transaccionProgramada.cantidad_repeticiones || 0;
@@ -88,6 +96,7 @@
       editeID = transaccionProgramada_id;
     }
     modalOpen = true;
+    console.log(fecha)
   };
 
   const onDelete = async (transaccionProgramada_id: number) => {
@@ -104,11 +113,12 @@
     monto = 0;
     categoriaId = 0;
     tipo = "ingreso";
-    fecha = new Date();
+    fecha = formatFechaISO(new Date());
     periodo = "diario";
     cantidadRepeticiones = 0;
     recurrente = false;  // Asegurarse de que esté en falso por defecto
     modalOpen = true;
+    console.log(fecha)
   };
 
   const modalAction = async () => {
@@ -188,13 +198,23 @@
     }
   };
 
-  const searchTransacciones = async (filterData: any) => {
-    if (filterData.length === 0) {
-      reloadData();
-      return;
-    }
-    console.log("Filtros aplicados:", filterData);
-  };
+  const search= async (filterData: any[]) => {
+  // Transformar el arreglo en un objeto con las propiedades y valores esperados
+  const transformedFilters = filterData.reduce((acc: any, curr: any) => {
+    acc[curr.name] = curr.value;
+    return acc;
+  }, {});
+
+  // Validar si no hay filtros
+  if (Object.keys(transformedFilters).length === 0) {
+    reloadData();
+    return;
+  }
+if (userData?.token) {
+  transaccionesProgramadasLista= await filtrarTp(userData.token,transformedFilters);
+  return
+}
+}
 
   // Función para buscar el nombre de la categoría por su ID
   const searchCate = (id: any) => {
@@ -246,7 +266,7 @@
         alignment="right"
         itemName="Transacción Programada"
         createItem={openCreateModal}
-        searchEve={searchTransacciones}
+        searchEve={search}
       />
       <br />
       <div class="p-6 bg-gray-50 min-h-screen">
@@ -277,7 +297,11 @@
                   <span class="font-bold">Categoría:</span> {searchCate(transaccion.categoria_id)}
                 </p>
                 <p class="text-lg">
-                  <span class="font-bold">Fecha:</span> {new Date(transaccion.fecha).toLocaleString()}
+                  <span class="font-bold">Próxima ejecución en</span> {formatearFechaDMA(transaccion.fecha)}
+                </p>
+                <p class="text-lg">
+                  <span class="font-bold">fecha de creación:</span>
+                  {formatDate(transaccion.creado_en)}
                 </p>
                 <p class="text-lg">
                   <span class="font-bold">Recurrente:</span> 

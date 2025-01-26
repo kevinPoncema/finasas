@@ -179,7 +179,7 @@ export const filtrarTransaccionesProgramadas = async (req: Request, res: Respons
     }
 
     if (fecha_inicio && fecha_fin) {
-      filtros.fecha = { [Op.between]: [new Date(fecha_inicio), new Date(fecha_fin)] }; // Filtrar por rango de fechas
+      filtros.creado_en = { [Op.between]: [new Date(fecha_inicio), new Date(fecha_fin)] }; // Filtrar por rango de fechas
     } else if (fecha_inicio || fecha_fin) {
       res.status(400).json({ error: "Debe proporcionar ambas fechas: fecha_inicio y fecha_fin." });
       return;

@@ -1,4 +1,3 @@
-import { obtenerPresupuestos } from './presupuestoController';
 import { Request, Response } from "express";
 import {ControlTotales} from "@models/ControlTotales"
 import {Transaccion} from "@models/Transaccion"
@@ -81,11 +80,13 @@ export const obtenerTotales = async (req: Request, res: Response): Promise<void>
         },
       });
       // Responder con los totales y el regreso mensual
+      const totalGeneral = controlTotales.dataValues.total_ingresos - controlTotales.dataValues.total_egresos;
       res.status(200).json({
         total_ingresos: Number(controlTotales.dataValues.total_ingresos),
         total_egresos: Number(controlTotales.dataValues.total_egresos),
         total_presupuesto_previsto: Number(controlTotales.dataValues.total_presupuesto_previsto),
         egreso_mensual: Number(egresoMensuales || 0), // Si no hay egreso, devolver 0
+        total_general: Number(totalGeneral)
       });
     } catch (error) {
       console.error(error);

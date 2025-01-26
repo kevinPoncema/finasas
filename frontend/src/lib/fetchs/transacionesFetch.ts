@@ -1,5 +1,5 @@
 import type { Transaccion } from "../apitypes";
-
+import {handleDateRange} from "$lib/helpers/formatearFecha"
 const baseUrl = process.env.VITE_API_URL;
 
 // Obtener transacciones
@@ -112,6 +112,11 @@ export async function editTransaccion(
 
  export async function filtrarTransacciones(token: string,bodyData:any): Promise<Transaccion[]> {
   try {
+    if (bodyData.fecha_inicio || bodyData.fecha_fin) {
+      const f =handleDateRange(bodyData.fecha_inicio,bodyData.fecha_fin);
+      bodyData.fecha_inicio=f.startDate;
+      bodyData.fecha_fin = f.endDate
+    }
     const response = await fetch(`${baseUrl}/transacciones/filtrar`, {
       method: 'POST',
       headers: {

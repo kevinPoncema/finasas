@@ -1,6 +1,7 @@
 <script lang="ts">
   import authValidation from "$lib/helpers/authValidation";
   import SideMenu from "$lib/components/SideMenu.svelte";
+  import {formatDate}from "$lib/helpers/formatearFecha"
   import { onMount } from "svelte";
   import type { UserData, Presupuesto, Filter, Categoria, option } from "$lib/apitypes";
   import FilterBar from "$lib/components/FilterBar.svelte";
@@ -30,6 +31,8 @@
     { name: "costo", type: "input", options: null },
     { name: "descripcion", type: "input", options: null },
     { name: "categoria_id", type: "select", options: null },
+    { name: "fecha_inicio", type: "date", options: null },
+    { name: "fecha_fin", type: "date", options: null },
   ];
   let categoriasFiltradas: option[] = [];
   let loading = true; // Indicador de carga
@@ -210,7 +213,10 @@ if (userData?.token) {
                   <span class="font-bold">Categoría:</span>
                   {searchCate(presupuesto.categoria_id)}
                 </p>
-
+                <p class="text-lg">
+                  <span class="font-bold">fecha de creación:</span>
+                  {formatDate(presupuesto.creado_en)}
+                </p>
                 <button
                 class="mt-4 w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
                 on:click={() => createTransaction(presupuesto)}

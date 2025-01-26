@@ -1,5 +1,6 @@
 const baseUrl = process.env.VITE_API_URL;
 import type {Presupuesto} from "../apitypes"
+import {handleDateRange} from "$lib/helpers/formatearFecha"
 export async function getpresupuestos(token: string): Promise<Presupuesto[]> {
     try {
       const response = await fetch(`${baseUrl}/presupuestos`, {
@@ -118,6 +119,11 @@ export async function getpresupuestos(token: string): Promise<Presupuesto[]> {
 
  export async function Filtrarpresupuestos(token: string,bodyData:any): Promise<Presupuesto[]> {
   try {
+    if (bodyData.fecha_inicio || bodyData.fecha_fin) {
+      const f =handleDateRange(bodyData.fecha_inicio,bodyData.fecha_fin);
+      bodyData.fecha_inicio=f.startDate;
+      bodyData.fecha_fin = f.endDate
+    }
     const response = await fetch(`${baseUrl}/presupuestos/filtrar`, {
       method: 'POST',
       headers: {

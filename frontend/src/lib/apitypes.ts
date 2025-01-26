@@ -39,7 +39,7 @@ export interface TransaccionProgramada {
     monto: number;
     tipo: "ingreso" | "egreso";
     recurrente: boolean;
-    fecha: Date;
+    fecha: string;
     periodo: "diario" | "semanal" | "mensual" | "anual" | "15enal";
     cantidad_repeticiones?: number;
     repeticiones: number;
@@ -65,7 +65,7 @@ export type option ={
 }
 export interface Filter {
   name: string;
-  type: 'input' | 'select' | 'date';
+  type: 'input' | 'select' | 'date' | 'chek';
   options: option[] | null;
 }
 

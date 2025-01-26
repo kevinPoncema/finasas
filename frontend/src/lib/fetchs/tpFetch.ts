@@ -1,5 +1,5 @@
 import type { TransaccionProgramada } from "../apitypes";
-
+import {handleDateRange} from "$lib/helpers/formatearFecha"
 const baseUrl = process.env.VITE_API_URL;
 
 // Obtener transacciones programadas
@@ -135,5 +135,38 @@ export async function editTransaccionProgramada(
   } catch (error) {
     console.error('Error en editTransaccionProgramada:', error);
     throw error;
+  }
+}
+
+export async function filtrarTp(token: string,bodyData:any): Promise<TransaccionProgramada[]> {
+  try {
+    if (bodyData.fecha_inicio || bodyData.fecha_fin) {
+      const f =handleDateRange(bodyData.fecha_inicio,bodyData.fecha_fin);
+      bodyData.fecha_inicio=f.startDate;
+      bodyData.fecha_fin = f.endDate
+    }
+    const response = await fetch(`${baseUrl}/transacciones-programadas/filtrar`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bodyData)
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      //console.log('Categorías obtenidas exitosamente:', data.message);
+      return data;
+    } else {
+      // Si la respuesta no es exitosa, lanzar un error
+      const errorData = await response.json();
+      console.error('Error de API:', errorData.message);
+      throw new Error(errorData.message || 'Error desconocido');
+    }
+  } catch (error) {
+    // Captura de errores generales
+    console.error('Error en getCategorias:', error);
+    return [];  // Retornar un array vacío si hay un error
   }
 }

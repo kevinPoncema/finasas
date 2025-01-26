@@ -55,16 +55,8 @@
     }
 
     // Si todos los filtros son válidos, emite el evento o realiza alguna acción
-    //console.log("Filtros listos para búsqueda:", formattedFilters);
+    console.log("Filtros listos para búsqueda:", formattedFilters);
     searchEve(formattedFilters);
-  };
-
-  // Función para ocultar la UI por 1 segundo antes de mostrarla
-  const hideAndShowUI = () => {
-    areFiltersVisible = false;
-    setTimeout(() => {
-      areFiltersVisible = true;
-    }, 1000); // Retraso de 1 segundo
   };
 </script>
 
@@ -160,14 +152,7 @@
               {:else if type === 'date'}
                 <div class="flex space-x-2">
                   <input
-                    type="datetime-local"
-                    class="px-3 py-1 border rounded-md w-full"
-                    bind:value={addedFilters[index].field}
-                    on:input={(e) => handleFieldChange(index, e.target.value)}
-                  />
-                  <span>-</span>
-                  <input
-                    type="datetime-local"
+                    type="date"
                     class="px-3 py-1 border rounded-md w-full"
                     bind:value={addedFilters[index].field}
                     on:input={(e) => handleFieldChange(index, e.target.value)}
