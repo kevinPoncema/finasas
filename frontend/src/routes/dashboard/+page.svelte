@@ -80,23 +80,24 @@
           </div>
         </div>
 
-        <!-- Contenedor de las gráficas -->
-        <div class="charts-container mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <!-- Gráfica de barras -->
-          <div class="chart-item bg-white shadow-lg rounded-2xl p-4 h-[25rem] sm:h-[30rem] flex items-center justify-center">
-            <BarGraph totalesResponse={balance} />
-          </div>
+    <!-- Contenedor de las gráficas -->
+<div class="charts-container mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+  <!-- Gráfica de barras -->
+  <div class="chart-item bg-white shadow-lg rounded-2xl p-4 min-h-[30rem] sm:h-[30rem] flex items-center justify-center flex-grow">
+    <BarGraph totalesResponse={balance} />
+  </div>
 
-          <!-- Gráfica de círculo -->
-          <div class="chart-item bg-white shadow-lg rounded-2xl p-4 h-[25rem] sm:h-[28rem] flex items-center justify-center">
-            <CategorySummaryChart {categorySummary} />
-          </div>
-        </div>
+  <!-- Gráfica de círculo -->
+  <div class="chart-item bg-white shadow-lg rounded-2xl p-4 min-h-[30rem] sm:h-[28rem] flex items-center justify-center flex-grow">
+    <CategorySummaryChart {categorySummary} />
+  </div>
+</div>
 
-        <!-- Gráfica de línea debajo -->
-        <div class="mt-8 bg-white shadow-lg rounded-2xl p-4 h-[20rem] sm:h-[25rem] flex items-center justify-center">
-          <LinearChart token={userData?.token} />
-        </div>
+<!-- Gráfica de línea debajo -->
+<div class="mt-8 bg-white shadow-lg rounded-2xl p-4 min-h-[25rem] sm:h-[25rem] flex items-center justify-center flex-grow">
+  <LinearChart token={userData?.token} />
+</div>
+
       {/if}
     </div>
   </SideMenu>

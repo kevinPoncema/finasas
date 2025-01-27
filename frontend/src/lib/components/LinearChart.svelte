@@ -14,7 +14,10 @@
   const obtenerDatos = async () => {
     try {
       const datos = await getGraficaPeriodo(token, periodo);
-      datosGrafica = datos;
+      datosGrafica = datos.map((dato) => ({
+        ...dato,
+        capitalReal: dato.totalMontoIngreso - dato.totalMontoEgreso, // Calcular capital real
+      }));
       actualizarGrafica();
     } catch (error) {
       console.error("Error al obtener datos de la gráfica:", error);
@@ -46,11 +49,19 @@
             borderWidth: 2,
             tension: 0.3,
           },
+          {
+            label: "Capital Real", // Línea para el capital real
+            data: datosGrafica.map((dato) => dato.capitalReal),
+            borderColor: "rgba(34, 197, 94, 1)", // Verde
+            backgroundColor: "rgba(34, 197, 94, 0.2)", // Verde suave
+            borderWidth: 2,
+            tension: 0.3,
+          },
         ],
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false, // Esto permite que la gráfica se ajuste a su contenedor
+        maintainAspectRatio: false, // Permite que la gráfica ocupe todo el espacio disponible
         plugins: {
           legend: {
             position: "top",
@@ -65,6 +76,9 @@
             title: {
               display: true,
               text: "Fecha",
+            },
+            ticks: {
+              maxRotation: 90, // Gira las etiquetas para que quepan mejor en pantallas pequeñas
             },
           },
           y: {
@@ -115,7 +129,7 @@
   </div>
 
   <!-- Contenedor para el canvas -->
-  <div class="relative w-full h-80 sm:h-[30rem]">
+  <div class="relative w-full h-[45rem] sm:h-[30rem]">
     <canvas id="line-chart"></canvas>
   </div>
 </div>
