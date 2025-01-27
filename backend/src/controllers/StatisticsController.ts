@@ -79,6 +79,16 @@ export const obtenerTotales = async (req: Request, res: Response): Promise<void>
           },
         },
       });
+
+      const ingresoMensuales = await Transaccion.sum("monto", {
+        where: {
+          subusuario_id: tokenData.subusuario_id,
+          tipo: "ingreso", // Solo considerar ingreso
+          creado_en: {
+            [Op.between]: [inicioMes, finMes], // Entre el inicio y fin del mes
+          },
+        },
+      });
       // Responder con los totales y el regreso mensual
       const totalGeneral = controlTotales.dataValues.total_ingresos - controlTotales.dataValues.total_egresos;
       res.status(200).json({
@@ -86,7 +96,8 @@ export const obtenerTotales = async (req: Request, res: Response): Promise<void>
         total_egresos: Number(controlTotales.dataValues.total_egresos),
         total_presupuesto_previsto: Number(controlTotales.dataValues.total_presupuesto_previsto),
         egreso_mensual: Number(egresoMensuales || 0), // Si no hay egreso, devolver 0
-        total_general: Number(totalGeneral)
+        total_general: Number(totalGeneral),
+        ingreso_mensual:Number(ingresoMensuales || 0)
       });
     } catch (error) {
       console.error(error);

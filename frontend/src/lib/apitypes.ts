@@ -74,4 +74,17 @@ export interface TotalesResponse {
   total_egresos: number;
   total_presupuesto_previsto: number;
   total_general: number;
+  egreso_mensual:number | null;
+  ingreso_mensual:number | null;
+}
+
+
+export interface CategorySummary {
+  categoria: {
+    id: number;
+    nombre: string;
+  };
+  totalTransacciones: number;
+  totalMonto: number;
+  porcentaje: string;
 }
