@@ -50,9 +50,9 @@
       {:else}
         <!-- Card de Resumen de Totales -->
         <div class="flex justify-center">
-          <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-6">
+          <div class="w-full max-w-4xl bg-white shadow-lg rounded-2xl p-6">
             <!-- Encabezado -->
-            <h2 class="text-xl font-bold text-gray-800 text-center">
+            <h2 class="text-xl font-bold text-gray-800 text-center mb-6">
               Resumen de Totales
             </h2>
 
@@ -81,20 +81,20 @@
         </div>
 
         <!-- Contenedor de las gráficas -->
-        <div class="charts-container mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="charts-container mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
           <!-- Gráfica de barras -->
-          <div class="chart-item bg-white shadow-lg rounded-2xl p-4 h-[30rem] flex items-center justify-center">
+          <div class="chart-item bg-white shadow-lg rounded-2xl p-4 h-[25rem] sm:h-[30rem] flex items-center justify-center">
             <BarGraph totalesResponse={balance} />
           </div>
 
           <!-- Gráfica de círculo -->
-          <div class="chart-item bg-white shadow-lg rounded-2xl p-4 h-[28rem] flex items-center justify-center">
+          <div class="chart-item bg-white shadow-lg rounded-2xl p-4 h-[25rem] sm:h-[28rem] flex items-center justify-center">
             <CategorySummaryChart {categorySummary} />
           </div>
         </div>
 
         <!-- Gráfica de línea debajo -->
-        <div class="mt-8 bg-white shadow-lg rounded-2xl p-4 h-[25rem] flex items-center justify-center">
+        <div class="mt-8 bg-white shadow-lg rounded-2xl p-4 h-[20rem] sm:h-[25rem] flex items-center justify-center">
           <LinearChart token={userData?.token} />
         </div>
       {/if}
@@ -108,3 +108,5 @@
     height: auto;
   }
 </style>
+
+
