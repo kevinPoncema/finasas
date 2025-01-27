@@ -12,6 +12,8 @@ import transacciones from "@routes/transaccionesRoutes"
 import programerTranssaccionRouter from "@routes/TransaccionProgramadaRouter"
 import {StatisticsRouter} from "@routes/StatisticsRouter"
 import presupuestoRoutes from "@routes/presupuestoRoutes"
+import { swaggerSpec, swaggerUi } from '@config/swaggerConfig'; // Ajusta según la estructura de tu proyecto
+
 // Cargar variables de entorno desde el archivo .env
 dotenv.config();
 
@@ -24,7 +26,10 @@ const PORT = process.env.PORT || 3000;
 // Middleware para parsear JSON
 app.use(express.json());
 app.use(cors());
-// Sincronizar modelos y conectar con la base de datos
+
+// Serve Swagger UI
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 (async () => {
   try {
     await sequelize.addModels([Usuario, Subusuario, Transaccion]); // Añadir los modelos

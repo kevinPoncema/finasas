@@ -214,8 +214,8 @@ export const obtenerMontoTotalPorPeriodo = async (req: Request, res: Response): 
       where: {
         subusuario_id: subusuarioId,
       },
-      group: [sequelize.fn("DATE", sequelize.col("creado_en"))], // Agrupar por fecha
-      order: [[sequelize.fn("DATE", sequelize.col("creado_en")), "ASC"]],
+      group: [groupBy], // Asegurarse de usar groupBy en la cláusula GROUP BY
+      order: [[groupBy, "ASC"]], // Asegurarse de usar groupBy en el ORDER BY
     });
 
     // Mapear la respuesta para retornar la fecha formateada y los totales
